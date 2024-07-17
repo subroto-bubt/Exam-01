@@ -10,6 +10,7 @@ import {
 import RootLayout from "./rootLayout/RootLayout";
 import TaskView from "./Pages/TaskView";
 import Contact from "./Pages/Contact";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const router = createBrowserRouter(

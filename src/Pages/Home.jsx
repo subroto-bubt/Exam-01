@@ -1,15 +1,72 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTask } from "../features/taskSlice";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 const Home = () => {
   const [name, setName] = useState("");
   const [protitle, setProtitle] = useState("");
   const [prodes, setProdes] = useState("");
-  const [checkbox, setCheckbox] = useState(Boolean);
+  const dispatch = useDispatch();
+
+  const [change, setChange] = useState(true);
+  function buttonHandler() {
+    setChange(!change);
+  }
+
   const Max_length = 100;
   const remainder = Max_length - prodes.length;
-  console.log(checkbox);
+
+  const handleSaveTask = (e) => {
+    e.preventDefault();
+
+    if (name !== "" && protitle !== "" && prodes !== "") {
+      const newTask = {
+        id: Date.now().toString(32),
+        name,
+        protitle,
+        prodes,
+        createdAt: new Date().toString(),
+      };
+      setName("");
+      setProtitle("");
+      setProdes("");
+
+      dispatch(addTask(newTask));
+
+      toast.success("🦄 Project Submission Success", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } else {
+      toast.error("🦄 Please fill up the blank filds!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+
   return (
     <>
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
+      <ToastContainer />
       <div className="w-full h-screen flex justify-center items-center">
         <div className="w-1/3 bg-slate-950 shadow-md rounded-md px-4 py-5 box-border">
           <div>
@@ -61,17 +118,25 @@ const Home = () => {
                 <div className="input">
                   <input
                     type="checkbox"
-                    value={checkbox}
-                    className="text-white"
+                    name="check"
+                    id="group"
+                    onChange={buttonHandler}
                   />
-                  <p className="text-white">React</p>
+                  <level for="group" className="text-white">
+                    I want to add this task
+                  </level>
                 </div>
               </div>
+              ``
               <div>
-                <button className="bg-gray-600 text-white text-xl font-mono px-5 py-2 rounded-md mt-3">
+                <button className="hover:bg-gray-800 bg-gray-600 text-white text-xl font-mono px-5 py-2 border border-white rounded-md mt-3">
                   Cancel
                 </button>
-                <button className="bg-gray-600 text-white text-xl font-mono px-5 py-2 rounded-md mt-3 ml-2">
+                <button
+                  onClick={handleSaveTask}
+                  disabled={change}
+                  className="hover:bg-gray-800 bg-gray-600 text-white text-xl font-mono px-5 py-2 border border-white rounded-md mt-3 ml-2"
+                >
                   Save
                 </button>
               </div>
